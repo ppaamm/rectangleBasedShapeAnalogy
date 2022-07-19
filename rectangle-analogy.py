@@ -1,7 +1,7 @@
 import numpy as np
 
 from shapes.point import Point
-from shapes.rectangle import Rectangle
+from shapes.rectangle import Rectangle, CenteredRectangle
 from shapes.shape import Shape
 
 
@@ -13,7 +13,7 @@ from shapes.shape import Shape
 
 
 
-def rectangleAnalogy(RA: Rectangle, RB: Rectangle, RC: Rectangle) -> Rectangle:
+def centeredRectangleAnalogy(RA: CenteredRectangle, RB: CenteredRectangle, RC: CenteredRectangle) -> CenteredRectangle:
     center = RC.center + RB.center - RA.center
     h = np.abs(RC.h + RB.h - RA.h)
     w = np.abs(RC.w + RB.w - RA.w)
@@ -32,8 +32,8 @@ def solve(SA: Shape, SB: Shape, SC: Shape) -> Shape:
     Rs = (s.getOutterRectangle() for s in shapelist)
     
     # Analogy on inner and outter rectangles
-    rd = rectangleAnalogy(rs[0], rs[1], rs[2])
-    Rd = rectangleAnalogy(Rs[0], Rs[1], Rs[2])
+    rd = centeredRectangleAnalogy(rs[0], rs[1], rs[2])
+    Rd = centeredRectangleAnalogy(Rs[0], Rs[1], Rs[2])
     
     r = rd.intersect(Rd)
     

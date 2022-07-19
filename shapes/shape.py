@@ -1,7 +1,7 @@
 from typing import Tuple, Set
 import numpy as np
 from . point import Point, pointDistance
-from . rectangle import Rectangle
+from . rectangle import CenteredRectangle
 
 
 
@@ -16,7 +16,7 @@ class Shape:
         self.ymin = min(self.Y)
         
         
-    def fromRectangle(rectangle: Rectangle):
+    def fromRectangle(rectangle: CenteredRectangle):
         points = {Point(rectangle.center.x - rectangle.w + x, 
                         rectangle.center.y - rectangle.h + y) 
                   for x in range(2 * rectangle.w + 1)
@@ -42,17 +42,17 @@ class Shape:
         return points.issubset(self.points)
     
 
-    def getOutterRectangle(self) -> Rectangle:
+    def getOutterRectangle(self) -> CenteredRectangle:
         xmin, xmax, ymin, ymax = self.getMaxCoordinates()
         
         center = Point(int((xmax - xmin) /2), int((ymax - ymin) /2))
         h = ymax - center.y
         w = xmax - center.x
         
-        return Rectangle(center, h, w)
+        return CenteredRectangle(center, h, w)
 
 
-    def getInnerRectangle(self) -> Rectangle:
+    def getInnerRectangle(self) -> CenteredRectangle:
         # Defines the center of the rectangle
         centroid = self.closestPointInShape(self.getCentroid())
         cx = centroid.x
@@ -76,7 +76,7 @@ class Shape:
                     break
                 h = h+1
             
-            candidates.append(Rectangle(centroid, h-1, w))
+            candidates.append(CenteredRectangle(centroid, h-1, w))
             w = w+1
             
         
