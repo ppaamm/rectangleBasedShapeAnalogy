@@ -42,6 +42,12 @@ class CenteredRectangle:
                          w = 2 * self.w + 1, 
                          h = 2 * self.h + 1)
     
+    def analogy(RA, RB, RC):
+        center = RC.center + RB.center - RA.center
+        h = np.abs(RC.h + RB.h - RA.h)
+        w = np.abs(RC.w + RB.w - RA.w)
+        return CenteredRectangle(center, h, w)
+    
     
     
 @dataclass
@@ -67,3 +73,10 @@ class Rectangle:
                             max(self.bottomRightVertex().y, other.bottomRightVertex().y))
         
         return Rectangle(topleft, bottomright.x - topleft.x, topleft.y - bottomright.y)
+    
+    def analogy(RA, RB, RC):
+        topLeft = RC.topLeft + RB.topLeft - RA.topLeft
+        # TODO: Manage case where RA is flat
+        w = int(RC.w * RB.w / RA.w)
+        h = int(RC.h * RB.h / RA.h)
+        return Rectangle(topLeft, w, h)

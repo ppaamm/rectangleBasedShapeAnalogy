@@ -13,11 +13,9 @@ from shapes.shape import Shape
 
 
 
-def centeredRectangleAnalogy(RA: CenteredRectangle, RB: CenteredRectangle, RC: CenteredRectangle) -> CenteredRectangle:
-    center = RC.center + RB.center - RA.center
-    h = np.abs(RC.h + RB.h - RA.h)
-    w = np.abs(RC.w + RB.w - RA.w)
-    return Rectangle(center, h, w)
+
+
+
 
 
 
@@ -32,8 +30,8 @@ def solve(SA: Shape, SB: Shape, SC: Shape) -> Shape:
     Rs = (s.getOutterRectangle() for s in shapelist)
     
     # Analogy on inner and outter rectangles
-    rd = centeredRectangleAnalogy(rs[0], rs[1], rs[2])
-    Rd = centeredRectangleAnalogy(Rs[0], Rs[1], Rs[2])
+    rd = Rectangle.analogy(rs[0], rs[1], rs[2])
+    Rd = Rectangle.analogy(Rs[0], Rs[1], Rs[2])
     
     r = rd.intersect(Rd)
     
