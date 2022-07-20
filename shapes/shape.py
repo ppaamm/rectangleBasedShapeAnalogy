@@ -1,4 +1,4 @@
-from typing import Tuple, Set
+from typing import Tuple, Set, List
 import numpy as np
 from . point import Point, pointDistance
 from . rectangle import CenteredRectangle, Rectangle
@@ -14,7 +14,14 @@ class Shape:
         self.ymax = max(self.Y)
         self.xmin = min(self.X)
         self.ymin = min(self.Y)
+    
+    
+    def fromUnionOfRectangles(rectangles: List[Rectangle]):
+        shapes = [Shape.fromRectangle(r).points for r in rectangles]
+        points = set.union(*shapes)
+        return Shape(points)
         
+    
         
     def fromCenteredRectangle(rectangle: CenteredRectangle):
         points = {Point(rectangle.center.x - rectangle.w + x, 
