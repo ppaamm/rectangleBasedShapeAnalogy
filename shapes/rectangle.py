@@ -63,6 +63,7 @@ class Rectangle:
         return self.topLeft
     
     def bottomRightVertex(self) -> Point:
+        #TODO: Turn this into a property
         return Point(self.topLeft.x + self.w, self.topLeft.y - self.h)
     
     def intersect(self, other):
@@ -80,3 +81,21 @@ class Rectangle:
         w = int(RC.w * RB.w / RA.w)
         h = int(RC.h * RB.h / RA.h)
         return Rectangle(topLeft, w, h)
+    
+    
+    def extractFrame(self, inner):
+        R1 = Rectangle(topLeft = self.topLeft, 
+                       w = inner.bottomRightVertex().x - self.topLeft.x,
+                       h = self.topLeft.y - inner.topLeft.y)
+        R2 = Rectangle(topLeft = Point(inner.topLeft.x + inner.w, self.topLeft.y),
+                       w = self.bottomRightVertex().x - inner.bottomRightVertex().x, 
+                       h = self.topLeft.y - inner.bottomRightVertex().y)
+        R3 = Rectangle(topLeft = Point(inner.topLeft.x, inner.topLeft.y - inner.h),
+                       w = self.bottomRightVertex().x - inner.topLeft.x,
+                       h = inner.bottomRightVertex().y - self.bottomRightVertex().y)
+        R4 = Rectangle(topLeft = Point(self.topLeft.x, inner.topLeft.y), 
+                       w = inner.topLeft.x - self.topLeft.x, 
+                       h = inner.topLeft.y - self.bottomRightVertex().y)
+        return [R1, R2, R3, R4]
+
+    
