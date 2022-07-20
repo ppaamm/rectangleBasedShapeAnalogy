@@ -74,8 +74,8 @@ class Shape:
         xmin, xmax, ymin, ymax = self.getMaxCoordinates()
         
         topleft = Point(xmin, ymax)
-        h = ymax - ymin
-        w = xmax - xmin
+        h = ymax - ymin + 1
+        w = xmax - xmin + 1
         return Rectangle(topLeft=topleft, w=w, h=h)
     
 
@@ -161,7 +161,7 @@ class Shape:
             return self.getInnerRectangleStochastic(**kwargs)
         
         # If none of the above
-        return self.getInnerCenteredRectangle().toRectagle()
+        return self.getInnerCenteredRectangle().toRectangle()
     
     
     
