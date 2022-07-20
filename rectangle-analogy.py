@@ -50,3 +50,7 @@ shape = Shape({ Point(x,y) for x in range(20) for y in range(12) })
 
 R = shape.getOutterRectangle()
 r = shape.getInnerRectangle()
+
+
+options = {'seed': 42, 'n_runs': 100}
+shape.getInnerRectangle(method="stochastic", **options)

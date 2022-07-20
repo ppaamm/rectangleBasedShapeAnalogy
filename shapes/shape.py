@@ -104,6 +104,21 @@ class Shape:
     
     
     
+    def getInnerRectangleStochastic(self, **kwargs) -> Rectangle:
+        seed = kwargs.get('seed', 42)
+        n_runs = kwargs.get('n_runs', 100)
+        
+        np.random.seed(seed)
+        
+        candidates = list()
+        
+        for i in range(n_runs):
+            topLeft = np.random.choice(list(self.points))
+            candidates.append(self.extendInnerRectangleFromTopLeft(topLeft))
+        
+        return max(candidates, key = lambda R: R.area())
+    
+    
     ############################################################################
     # TODO: Better algorithm to find the best inner rectangle
     
@@ -113,11 +128,32 @@ class Shape:
             if not(self.containsPoint(Point(point.x + max_w + 1, point.y))): return max_w
             max_w = max_w + 1
             
+    def maxHeightUnderPoint(self, point: Point) -> int:
+        max_h = 0
+        while(True):
+            if not(self.containsPoint(Point(point.x, point.y - max_h - 1))): return max_h
+            max_h = max_h + 1
+            
     
     def extendInnerRectangleFromTopLeft(self, topLeft: Point) -> Rectangle:
-        # TODO
-        return None
+        candidates = list()
+        
+        max_h = self.maxHeightUnderPoint(topLeft)
+        max_w = self.maxWidthAtRightOfPoint(topLeft)
+        
+        for w in range(max_w + 1):
+            h = self.maxHeightUnderPoint(Point(topLeft.x + w, topLeft.y))
+            if h < max_h: max_h = h
+            candidates.append(Rectangle(topLeft, w, max_h))
+        return max(candidates, key = lambda R: R.area())
     
     
-    def getInnerRectangle(self) -> Rectangle:
+    def getInnerRectangle(self, method="center", **kwargs) -> Rectangle:
+        if method == "stochastic":    
+            return self.getInnerRectangleStochastic(**kwargs)
+        
+        # If none of the above
         return self.getInnerCenteredRectangle().toRectagle()
+    
+    
+    
