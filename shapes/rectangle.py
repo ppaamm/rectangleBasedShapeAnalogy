@@ -37,12 +37,18 @@ class CenteredRectangle:
         return CenteredRectangle.buildFromVertices(topleft, bottomright)
     
     
+    def toRectagle(self):
+        return Rectangle(topLeft = Point(self.center.x - self.w, self.center.y + self.h), 
+                         w = 2 * self.w + 1, 
+                         h = 2 * self.h + 1)
+    
+    
     
 @dataclass
 class Rectangle:
     topLeft: Point
-    h: int
     w: int
+    h: int
     
     def area(self) -> int:
         return self.h * self.w

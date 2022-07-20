@@ -1,7 +1,7 @@
 from typing import Tuple, Set
 import numpy as np
 from . point import Point, pointDistance
-from . rectangle import CenteredRectangle
+from . rectangle import CenteredRectangle, Rectangle
 
 
 
@@ -16,12 +16,22 @@ class Shape:
         self.ymin = min(self.Y)
         
         
-    def fromRectangle(rectangle: CenteredRectangle):
+    def fromCenteredRectangle(rectangle: CenteredRectangle):
         points = {Point(rectangle.center.x - rectangle.w + x, 
                         rectangle.center.y - rectangle.h + y) 
                   for x in range(2 * rectangle.w + 1)
                   for y in range(2 * rectangle.h + 1)}
         return Shape(points)
+    
+    
+    def fromRectangle(rectangle: Rectangle):
+        points = {Point(rectangle.topLeft.x + x, 
+                        rectangle.topLeft.y - y)
+                  for x in range(rectangle.w)
+                  for y in range(rectangle.h)}
+        return Shape(points)
+    
+    
         
     def getMaxCoordinates(self) -> Tuple[int, int, int, int]:
         return self.xmin, self.xmax, self.ymin, self.ymax
@@ -42,17 +52,27 @@ class Shape:
         return points.issubset(self.points)
     
 
-    def getOutterRectangle(self) -> CenteredRectangle:
+    def getOutterCenteredRectangle(self) -> CenteredRectangle:
         xmin, xmax, ymin, ymax = self.getMaxCoordinates()
         
         center = Point(int((xmax - xmin) /2), int((ymax - ymin) /2))
         h = ymax - center.y
         w = xmax - center.x
         
-        return CenteredRectangle(center, h, w)
+        return CenteredRectangle(center=center, h=h, w=w)
+    
+    
+    def getOutterRectangle(self) -> Rectangle:
+        xmin, xmax, ymin, ymax = self.getMaxCoordinates()
+        
+        topleft = Point(xmin, ymax)
+        h = ymax - ymin
+        w = xmax - xmin
+        return Rectangle(topLeft=topleft, w=w, h=h)
+    
 
 
-    def getInnerRectangle(self) -> CenteredRectangle:
+    def getInnerCenteredRectangle(self) -> CenteredRectangle:
         # Defines the center of the rectangle
         centroid = self.closestPointInShape(self.getCentroid())
         cx = centroid.x
@@ -81,3 +101,23 @@ class Shape:
             
         
         return max(candidates, key = lambda R: R.area())
+    
+    
+    
+    ############################################################################
+    # TODO: Better algorithm to find the best inner rectangle
+    
+    def maxWidthAtRightOfPoint(self, point: Point) -> int:
+        max_w = 0
+        while(True):
+            if not(self.containsPoint(Point(point.x + max_w + 1, point.y))): return max_w
+            max_w = max_w + 1
+            
+    
+    def extendInnerRectangleFromTopLeft(self, topLeft: Point) -> Rectangle:
+        # TODO
+        return None
+    
+    
+    def getInnerRectangle(self) -> Rectangle:
+        return self.getInnerCenteredRectangle().toRectagle()
