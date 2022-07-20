@@ -2,6 +2,7 @@ from typing import Tuple, Set, List
 import numpy as np
 from . point import Point, pointDistance
 from . rectangle import CenteredRectangle, Rectangle
+import matplotlib.pyplot as plt
 
 
 
@@ -161,6 +162,33 @@ class Shape:
         
         # If none of the above
         return self.getInnerCenteredRectangle().toRectagle()
+    
+    
+    
+    ############################################################################
+    # Visualize
+    
+    def visualize(self):
+        data = np.array([[ float(self.containsPoint(Point(i,j)))  for j in range(self.ymin-5, self.ymax + 5) ] 
+                         for i in range(self.xmin - 5, self.xmax + 5)])
+        
+        # creating a plot
+        pixel_plot = plt.figure()
+         
+          
+        # customizing plot
+        pixel_plot = plt.imshow(data, 
+                                cmap='binary', 
+                                interpolation='nearest', 
+                                extent=[self.xmin - 5, self.xmax + 5, self.ymin-5, self.ymax + 5])
+          
+        #plt.colorbar(pixel_plot)
+          
+        # save a plot
+        #plt.savefig('pixel_plot.png')
+          
+        # show plot
+        #plt.show(pixel_plot)
     
     
     
