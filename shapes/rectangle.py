@@ -37,6 +37,13 @@ class CenteredRectangle:
         return CenteredRectangle.buildFromVertices(topleft, bottomright)
     
     
+    def containsRectangle(self, R) -> bool:
+        bottomCondition = (self.center.y - self.h <= R.center.y - R.h)
+        topCondition = (self.center.y + self.h >= R.center.y + R.h)
+        leftCondition = (self.center.x - self.w <= R.center.x - R.w)
+        rightCondition = (self.center.x + self.w >= R.center.x + R.w)
+        return bottomCondition and topCondition and leftCondition and rightCondition
+    
     def toRectangle(self):
         return Rectangle(topLeft = Point(self.center.x - self.w, self.center.y + self.h), 
                          w = 2 * self.w + 1, 
@@ -74,6 +81,15 @@ class Rectangle:
                             max(self.bottomRightVertex().y, other.bottomRightVertex().y))
         
         return Rectangle(topleft, bottomright.x - topleft.x, topleft.y - bottomright.y)
+    
+    
+    def containsRectangle(self, R) -> bool:
+        bottomCondition = (self.bottomRightVertex().y <= R.bottomRightVertex().y )
+        topCondition = (self.topLeftVertex().y >= R.topLeftVertex().y)
+        leftCondition = (self.topLeftVertex().x <= R.topLeftVertex().x)
+        rightCondition = (self.bottomRightVertex().x >= R.bottomRightVertex().x)
+        return bottomCondition and topCondition and leftCondition and rightCondition
+    
     
     def analogy(RA, RB, RC):
         topLeft = RC.topLeft + RB.topLeft - RA.topLeft
