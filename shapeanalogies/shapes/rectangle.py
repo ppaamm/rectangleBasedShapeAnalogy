@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 from typing import Tuple
 from . point import Point
+from ..basicanalogies import realnumbers as real_analogies
 
 
 @dataclass
@@ -114,4 +115,63 @@ class Rectangle:
                        h = inner.topLeft.y - self.bottomRightVertex().y)
         return [R1, R2, R3, R4]
 
+
+
+class BiRectangle:
+    def __init__(self, outerRectangle: Rectangle, innerRectangle: Rectangle):
+        assert outerRectangle.containsRectangle(innerRectangle), "Inner rectangle should be contained by outter rectangle"
+        
+        self.innerRectangle = innerRectangle
+        self.outerRectangle = outerRectangle
     
+    
+    def __repr__(self):
+        return "Outer: " + str(self.outerRectangle) + "\nInner: " + str(self.innerRectangle)
+    
+    def __str__(self):
+        return "Outer: " + str(self.outerRectangle) + "\nInner: " + str(self.innerRectangle)
+    
+    def analogy(BRA, BRB, BRC):
+        outerD = Rectangle.analogy(BRA.outerRectangle, BRB.outerRectangle, BRC.outerRectangle)
+        
+        # Geometrical analogy on the rescaled inner rectangles
+        xA_rescale = (BRA.innerRectangle.topLeft.x - BRA.outerRectangle.topLeft.x) / BRA.outerRectangle.w
+        xB_rescale = (BRB.innerRectangle.topLeft.x - BRB.outerRectangle.topLeft.x) / BRB.outerRectangle.w
+        xC_rescale = (BRC.innerRectangle.topLeft.x - BRC.outerRectangle.topLeft.x) / BRC.outerRectangle.w
+        xD_rescale = real_analogies.bounded(xA_rescale, xB_rescale, xC_rescale)
+        xD = outerD.topLeft.x + outerD.w * xD_rescale
+        
+        yA_rescale = (- BRA.innerRectangle.topLeft.y + BRA.outerRectangle.topLeft.y) / BRA.outerRectangle.h
+        yB_rescale = (- BRB.innerRectangle.topLeft.y + BRB.outerRectangle.topLeft.y) / BRB.outerRectangle.h
+        yC_rescale = (- BRC.innerRectangle.topLeft.y + BRC.outerRectangle.topLeft.y) / BRC.outerRectangle.h
+        yD_rescale = real_analogies.bounded(yA_rescale, yB_rescale, yC_rescale)
+        yD = outerD.topLeft.y - outerD.h * yD_rescale
+        
+        
+        
+        wA_rescale = (BRA.innerRectangle.w + BRA.innerRectangle.topLeft.x 
+                      - BRA.outerRectangle.topLeft.x) / BRA.outerRectangle.w
+        wB_rescale = (BRB.innerRectangle.w + BRB.innerRectangle.topLeft.x 
+                      - BRB.outerRectangle.topLeft.x) / BRB.outerRectangle.w
+        wC_rescale = (BRC.innerRectangle.w + BRC.innerRectangle.topLeft.x 
+                      - BRC.outerRectangle.topLeft.x) / BRC.outerRectangle.w 
+        wD_rescale = real_analogies.bounded(wA_rescale, wB_rescale, wC_rescale)
+        wD = outerD.topLeft.x - xD + outerD.w * wD_rescale
+        
+        
+        hA_rescale = (BRA.innerRectangle.h - BRA.innerRectangle.topLeft.y 
+                      + BRA.outerRectangle.topLeft.y) / BRA.outerRectangle.h
+        hB_rescale = (BRB.innerRectangle.h - BRB.innerRectangle.topLeft.y 
+                      + BRB.outerRectangle.topLeft.y) / BRB.outerRectangle.h
+        hC_rescale = (BRC.innerRectangle.h - BRC.innerRectangle.topLeft.y 
+                      + BRC.outerRectangle.topLeft.y) / BRC.outerRectangle.h 
+        hD_rescale = real_analogies.bounded(hA_rescale, hB_rescale, hC_rescale)
+        hD = yD - outerD.topLeft.y + outerD.h * hD_rescale
+        
+        
+        innerD = Rectangle(Point(int(xD), int(yD)), int(wD), int(hD))
+        
+        return BiRectangle(outerD, innerD)
+        
+
+

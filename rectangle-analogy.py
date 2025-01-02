@@ -1,18 +1,8 @@
 import numpy as np
 
-from shapes.point import Point
-from shapes.rectangle import Rectangle, CenteredRectangle
-from shapes.shape import Shape
-
-
-
-
-
-
-
-
-
-
+from shapeanalogies.shapes.point import Point
+from shapeanalogies.shapes.rectangle import Rectangle, CenteredRectangle, BiRectangle
+from shapeanalogies.shapes.shape import Shape
 
 
 
